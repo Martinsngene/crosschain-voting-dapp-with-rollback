@@ -16,8 +16,8 @@
   "dependencies": {
     "dotenv": "^16.3.1",
     "ethers": "^5.7.2",
-    "icon-sdk-js": "^1.4.5",
-    "web3": "^4.0.2"
+    "icon-sdk-js": "^1.5.2",
+    "web3": "1.4.0"
   },
   "devDependencies": {
     "eslint": "^8.43.0",

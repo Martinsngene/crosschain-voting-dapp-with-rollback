@@ -1,6 +1,6 @@
 const IconService = require("icon-sdk-js");
 const utils = require("./utils");
-const { Web3 } = require("web3");
+const Web3 = require("web3");
 const { ethers } = require("ethers");
 const { BigNumber } = ethers;
 
@@ -38,7 +38,7 @@ const {
   strToHex,
   strToHexPadded,
   fileExists,
-  parseEventResponseFromTracker
+  parseEventResponseFromTracker,
 } = utils;
 
 const {
@@ -46,7 +46,7 @@ const {
   IconConverter,
   SignedTransaction,
   HttpProvider,
-  IconWallet
+  IconWallet,
 } = IconService.default;
 
 // validate configs
@@ -164,7 +164,7 @@ async function parseCallMessageSentEvent(event) {
     _from: indexed[1],
     _to: indexed[2],
     _sn: BigNumber.from(indexed[3]),
-    _nsn: BigNumber.from(data[0])
+    _nsn: BigNumber.from(data[0]),
   };
 }
 
@@ -261,10 +261,7 @@ async function voteNoFromIcon(contract, useRollback = true) {
  */
 async function getVotesFromICON(contract) {
   try {
-    const txObj = new CallBuilder()
-      .to(contract)
-      .method("getVotes")
-      .build();
+    const txObj = new CallBuilder().to(contract).method("getVotes").build();
 
     return await ICON_SERVICE.call(txObj).execute();
   } catch (e) {
@@ -283,7 +280,7 @@ async function getFeeFromIcon(useRollback = true) {
   try {
     const params = {
       _net: NETWORK_LABEL_SECONDARY,
-      _rollback: useRollback ? "0x1" : "0x0"
+      _rollback: useRollback ? "0x1" : "0x0",
     };
     // console.log("# params", params);
 
@@ -424,7 +421,7 @@ async function waitRollbackMessageEventICON(id) {
 async function executeRollbackICON(id) {
   try {
     const params = {
-      _sn: id
+      _sn: id,
     };
     const txObj = new CallTransactionBuilder()
       .from(ICON_WALLET.getAddress())
@@ -489,9 +486,7 @@ async function waitEventFromTrackerICON(
             if (eventIdNumber >= highestIdFound) {
               highestIdFound = eventIdNumber;
               console.log(
-                `## Event id does not match. Found Id: ${eventIdNumber} (${
-                  event.indexed[1]
-                }), Looking for Id: ${idNumber} (${id})`
+                `## Event id does not match. Found Id: ${eventIdNumber} (${event.indexed[1]}), Looking for Id: ${idNumber} (${id})`
               );
             } else {
               continue;
@@ -808,12 +803,12 @@ async function deployEvm() {
     // contract.options.data = bytecode;
     const deployTx = contract.deploy({
       data: bytecode,
-      arguments: [XCALL_SECONDARY, 10]
+      arguments: [XCALL_SECONDARY, 10],
     });
     const deployedContract = await deployTx
       .send({
         from: EVM_WALLET.address,
-        gas: await deployTx.estimateGas()
+        gas: await deployTx.estimateGas(),
       })
       .once("transactionHash", txHash => {
         console.log("Mining deployment transaction...");
@@ -883,7 +878,7 @@ const lib = {
   waitEventFromTrackerICON,
   getVotesFromICON,
   executeRollbackICON,
-  waitEventICON
+  waitEventICON,
 };
 
 module.exports = lib;
