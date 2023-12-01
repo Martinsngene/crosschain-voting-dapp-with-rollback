@@ -10,41 +10,41 @@ const config = {
     localhost: "http://localhost:9080/api/v3",
     berlin: "https://berlin.net.solidwallet.io/api/v3/icon_dex",
     custom: "https://server02.espanicon.team/api/v3",
-    sepolia: "https://sepolia.infura.io/v3/ffbf8ebe228f4758ae82e175640275e0"
+    sepolia: "https://sepolia.infura.io/v3/ffbf8ebe228f4758ae82e175640275e0",
   },
   tracker: {
     hostname: "tracker.berlin.icon.community",
-    logs: "/api/v1/logs?address="
+    logs: "/api/v1/logs?address=",
   },
   contract: {
     icon: {
       chain: "cx0000000000000000000000000000000000000000",
-      governance: "cx0000000000000000000000000000000000000001"
+      governance: "cx0000000000000000000000000000000000000001",
     },
     berlin: {
-      xcall: "cxf4958b242a264fc11d7d8d95f79035e35b21c1bb"
+      xcall: "cxf4958b242a264fc11d7d8d95f79035e35b21c1bb",
     },
     sepolia: {
       dapp: "0x597F73bfb3124B6145151E7a8A30b781C41FF2B0",
-      xcall: "0x694C1f5Fb4b81e730428490a1cE3dE6e32428637"
-    }
+      xcall: "0x694C1f5Fb4b81e730428490a1cE3dE6e32428637",
+    },
   },
   nid: {
     localhost: 3,
     berlin: 7,
-    custom: 3
+    custom: 3,
   },
   network: {
     icon: {
-      label: "0x7.icon"
+      label: "0x7.icon",
     },
     berlin: {
-      label: "0x7.icon"
+      label: "0x7.icon",
     },
     sepolia: {
-      label: "0xaa36a7.eth2"
-    }
-  }
+      label: "0xaa36a7.eth2",
+    },
+  },
 };
 
 module.exports = {
@@ -62,5 +62,5 @@ module.exports = {
   XCALL_SECONDARY: config.contract[NETWORK_SECONDARY].xcall,
   NETWORK_LABEL_PRIMARY: config.network[NETWORK_PRIMARY].label,
   NETWORK_LABEL_SECONDARY: config.network[NETWORK_SECONDARY].label,
-  deploymentsPath: "./deployments.json"
+  deploymentsPath: "./deployments.json",
 };

@@ -5,6 +5,7 @@ const {
   isDeployed,
   getDeployments,
   saveDeployments,
+  deploymentsPath,
   voteYesFromIcon,
   getTxResult,
   filterCallMessageSentEvent,
@@ -18,7 +19,8 @@ const {
   waitResponseMessageEventICON,
   waitRollbackMessageEventICON,
   getVotesFromICON,
-  executeRollbackICON
+  executeRollbackICON,
+  XCALL_PRIMARY,
 } = require("./utils/lib");
 
 /*
@@ -28,7 +30,7 @@ async function deploy() {
   try {
     const contracts = {
       primary: null,
-      secondary: null
+      secondary: null,
     };
 
     // deploying EVM contract
@@ -66,7 +68,8 @@ async function tests(contracts, rollback = false) {
 
     // filter CallMessageSent event
     const callMessageSentEvent = await filterCallMessageSentEvent(
-      txResult.eventLogs
+      txResult.eventLogs,
+      XCALL_PRIMARY
     );
     console.log("\n# CallMessageSent event:", callMessageSentEvent);
 
@@ -185,13 +188,13 @@ async function main() {
   try {
     // check if contracts have been deployed already
     let contracts = null;
-    if (isDeployed()) {
+    if (isDeployed(deploymentsPath)) {
       console.log("\n# using deployed contracts");
-      contracts = getDeployments();
+      contracts = getDeployments(deploymentsPath);
     } else {
       console.log("\n# deploying contracts");
       contracts = await deploy();
-      saveDeployments(contracts);
+      saveDeployments(contracts, deploymentsPath);
     }
 
     if (contracts !== null) {

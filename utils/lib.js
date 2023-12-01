@@ -1,11 +1,12 @@
 const IconService = require("icon-sdk-js");
-const utils = require("./utils");
+const config = require("./config");
 const Web3 = require("web3");
 const { ethers } = require("ethers");
 const { BigNumber } = ethers;
+const setupUtils = require("icon-crosschain-setup-utils");
+const customRequest = require("./customRequest");
 
 const {
-  // config values
   contract,
   PK_BERLIN,
   PK_SEPOLIA,
@@ -21,7 +22,9 @@ const {
   deploymentsPath,
   xcallAbiPath,
   tracker,
-  customRequest,
+} = config;
+
+const {
   // methods
   getIconContractByteCode,
   isDeployed,
@@ -39,7 +42,8 @@ const {
   strToHexPadded,
   fileExists,
   parseEventResponseFromTracker,
-} = utils;
+  isValidEVMAddress,
+} = setupUtils;
 
 const {
   IconBuilder,
@@ -115,7 +119,7 @@ async function fetchEventsFromTracker() {
  */
 async function deployIconContract(params) {
   try {
-    const content = getIconContractByteCode();
+    const content = getIconContractByteCode(jarPath);
     const payload = new IconBuilder.DeployTransactionBuilder()
       .contentType("application/java")
       .content(`0x${content}`)
@@ -308,7 +312,8 @@ async function deployIcon(evmDappContract) {
     console.log("\n # Deploying contract on ICON chain...");
     const params = getIconDappDeploymentsParams(
       NETWORK_LABEL_SECONDARY,
-      evmDappContract
+      evmDappContract,
+      XCALL_PRIMARY
     );
     console.log("\n# Params for contract deployment on ICON:", params);
 
@@ -660,7 +665,7 @@ async function getVotesCapFromEVM(contractAddress) {
  */
 function getDappContractObject(contractAddress) {
   try {
-    const { abi } = getDappContract();
+    const { abi } = getDappContract(solPath);
     return getContractObjectEVM(abi, contractAddress);
   } catch (e) {
     console.log(e);
@@ -675,7 +680,7 @@ function getDappContractObject(contractAddress) {
  */
 function getXcallContractEVM() {
   try {
-    const { abi } = getXcallContract();
+    const { abi } = getXcallContract(xcallAbiPath);
     return getContractObjectEVM(abi, XCALL_SECONDARY);
   } catch (e) {
     console.log(e);
@@ -798,7 +803,7 @@ async function sendSignedTxEVM(contract, method, ...args) {
 async function deployEvm() {
   try {
     console.log("\n # Deploying contract on EVM chain...");
-    const { abi, bytecode } = getDappContract();
+    const { abi, bytecode } = getDappContract(solPath);
     const contract = new EVM_SERVICE.eth.Contract(abi);
     // contract.options.data = bytecode;
     const deployTx = contract.deploy({
@@ -853,6 +858,7 @@ const lib = {
   sleep,
   strToHex,
   strToHexPadded,
+  isValidEVMAddress,
   // methods
   deployIconContract,
   getTxResult,
